@@ -44,7 +44,7 @@ void ByteStream::pop_output(const size_t len) {
     for(size_t i = 0; i<len; i++){
         buffer.pop_front();
     }
-    _num_byte_read += len;
+     _num_byte_read += len;
     REMAIN_CAPACITY += len;
 }
 
@@ -54,6 +54,7 @@ void ByteStream::pop_output(const size_t len) {
 std::string ByteStream::read(const size_t len) {
     string output = peek_output(len);
     pop_output(len);
+    // _num_byte_read += len;
     return output;
 }
 

@@ -29,7 +29,7 @@ class StreamReassembler {
 
     ByteStream _output;  //!< The reassembled in-order byte stream
     size_t _capacity;    //!< The maximum number of bytes
-
+    //! merge elm2 to elm1, return merged bytes
     long merge_block(block_node &elm1, const block_node &elm2);    
 
   public:
