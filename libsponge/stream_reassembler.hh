@@ -2,7 +2,8 @@
 #define SPONGE_LIBSPONGE_STREAM_REASSEMBLER_HH
 
 #include "byte_stream.hh"
-
+#include <set>
+#include <vector>
 #include <cstdint>
 #include <string>
 
@@ -11,9 +12,25 @@
 class StreamReassembler {
   private:
     // Your code here -- add private members as necessary.
+    struct block_node{
+	size_t begin = 0;
+	size_t length = 0;
+        std::string data = "";
+	bool operator<(const block_node b) const {
+	     return this->begin < b.begin;
+	}
+};    
+    
+    size_t _unassembled_byte = 0;
+    size_t _head_index = 0;
+    std::set<block_node> _blocks = {};
+    std::vector<char> _buffer = {};
+    bool _eof_flag = false;
 
     ByteStream _output;  //!< The reassembled in-order byte stream
     size_t _capacity;    //!< The maximum number of bytes
+
+    long merge_block(block_node &elm1, const block_node &elm2);    
 
   public:
     //! \brief Construct a `StreamReassembler` that will store up to `capacity` bytes.
