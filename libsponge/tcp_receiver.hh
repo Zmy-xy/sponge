@@ -15,8 +15,12 @@
 //! remote TCPSender.
 class TCPReceiver {
     //! Our data structure for re-assembling bytes.
+  private:
     StreamReassembler _reassembler;
-
+    bool _syn_flag = false;
+    bool _fin_flag = false;
+    size_t _base = 0;
+    size_t _isn = 0;
     //! The maximum number of bytes we'll store.
     size_t _capacity;
 
@@ -54,7 +58,7 @@ class TCPReceiver {
     size_t unassembled_bytes() const { return _reassembler.unassembled_bytes(); }
 
     //! \brief handle an inbound segment
-    void segment_received(const TCPSegment &seg);
+    bool segment_received(const TCPSegment &seg);
 
     //! \name "Output" interface for the reader
     //!@{
