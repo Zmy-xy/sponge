@@ -17,6 +17,20 @@
 //! segments if the retransmission timer expires.
 class TCPSender {
   private:
+    std::queue<TCPSegment> _segments_outstanding{};
+    size_t _bytes_in_flight = 0;
+    size_t _recv_ackno = 0;    
+    bool _syn_flag = false;
+    bool _fin_flag = false;
+    size_t _window_size = 0;
+    uint16_t _receiver_free_space = 0;
+    
+    size_t _timer = 0;
+    bool _timer_running = false;
+    size_t _consecutive_retransmission = 0;
+
+    bool _ack_valid(uint64_t abs_ackno);
+    void send_segment(TCPSegment &seg);
     //! our initial sequence number, the number for our SYN.
     WrappingInt32 _isn;
 
@@ -25,7 +39,7 @@ class TCPSender {
 
     //! retransmission timer for the connection
     unsigned int _initial_retransmission_timeout;
-
+    size_t _retransmission_timeout = 0;
     //! outgoing stream of bytes that have not yet been sent
     ByteStream _stream;
 
@@ -52,7 +66,7 @@ class TCPSender {
 
     //! \brief Generate an empty-payload segment (useful for creating empty ACK segments)
     void send_empty_segment();
-
+    
     //! \brief create and send segments to fill as much of the window as possible
     void fill_window();
 
